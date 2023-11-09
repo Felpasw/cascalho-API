@@ -5,7 +5,9 @@ const app = Express()
 
 app.use(Express.json())
 app.use(cookieParser())
-app.use(Express.urlencoded({ extended: true }))
+app.use('/static/images', Express.static('uploads'))
+
 app.use(router)
+app.use(Express.urlencoded({ extended: true }))
 
 app.listen(4000, () => console.log(`Sever is running!`))

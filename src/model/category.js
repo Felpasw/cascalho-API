@@ -1,8 +1,7 @@
-const Joi = require("joi")
+const Joi = require('joi')
 
 const object = Joi.object().keys({
-  name: Joi.string().required().label("Nome"),
-  icon: Joi.string().required().label("Icone"),
+  name: Joi.string().required().label('Nome')
 })
 
 module.exports = { object }

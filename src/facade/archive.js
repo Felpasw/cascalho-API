@@ -6,7 +6,17 @@ const { messages } = require('joi-translation-pt-br')
 const get = async (query) => {
   try {
     if (query.documentId) {
-      return await db.getItemByRelationId(query.documentId, 'documenttoarchive', 'document_id')
+      const documents = await db.getItemByRelationId(
+        query.documentId,
+        'documenttoarchive',
+        'document_id'
+      )
+      console.log(documents)
+      const archives = await documents.map(async (document) => {
+        return await db.getById(document.archiveId, 'archive')
+      })
+      console.log(archives)
+      return await Promise.all(archives)
     }
     throw new Error('Documento é obrigatório')
   } catch (error) {
@@ -25,16 +35,13 @@ const insert = async (object, file) => {
 
     await validation.object.validateAsync(object, { messages })
 
-    const archiveBuffer = fs.readFileSync(file.path)
-
     const document = await db.getById(object.documentId, 'document')
 
     if (!document) throw new Error('Documento não existe')
 
     const archive = await db.insert(
       {
-        name: file.filename,
-        archive: archiveBuffer
+        name: object.name ? object.name : file.filename
       },
       'archive'
     )
@@ -63,6 +70,11 @@ const insert = async (object, file) => {
 
 const remove = async (id) => {
   if (!id) return
+  await db.removeArchiveToDocumentRelation(id, 'archive_id')
+  const documentRelated = await db.getItemByRelationId(id, 'document', 'archive_id')
+  if (documentRelated) {
+    await db.update({ ...documentRelated, archiveId: null }, documentRelated.id, 'document')
+  }
   return await db.remove(id, 'archive')
 }
 

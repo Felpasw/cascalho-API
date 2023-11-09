@@ -103,8 +103,19 @@ const getItemByRelationId = async (id, tableName, columnName) => {
 
   return result
 }
+const removeArchiveToDocumentRelation = async (id, field) => {
+  const result = await db('documenttoarchive')
+    .update({ deleted_at: new Date() })
+    .where(field, id)
+    .catch((err) => {
+      console.log(err)
+      return false
+    })
+  return result
+}
 
 module.exports = {
+  removeArchiveToDocumentRelation,
   getItemByRelationId,
   get,
   getById,

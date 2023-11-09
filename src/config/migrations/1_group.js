@@ -4,7 +4,7 @@ exports.up = function (knex) {
     table.string('name')
     table.integer('screen_id').unsigned()
     table.foreign('screen_id').references('screen.id')
-    table.binary('image').notNullable()
+    table.string('image').notNullable()
     table.timestamps(true, true)
     table.datetime('deleted_at').defaultTo(null)
   })

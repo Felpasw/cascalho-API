@@ -31,9 +31,8 @@ const insert = async (object, file) => {
       }
     }
     if (file) {
-      const image = fs.readFileSync(file.path)
       const password = bcrypt.hashSync(object.password, saltRounds)
-      return await db.insert({ ...object, image, password }, 'user')
+      return await db.insert({ ...object, image: file.filename, password }, 'user')
     }
     const password = bcrypt.hashSync(object.password, saltRounds)
     return await db.insert({ ...object, password }, 'user')
@@ -50,16 +49,14 @@ const insert = async (object, file) => {
 
 const update = async (id, object, file) => {
   if (file && object.password) {
-    const imageBuffer = fs.readFileSync(file.path)
     const password = bcrypt.hashSync(object.password, saltRounds)
-    return await db.update({ ...object, image: imageBuffer, password }, id, 'user')
+    return await db.update({ ...object, image: file.filename, password }, id, 'user')
   } else if (!file && object.password) {
     const password = bcrypt.hashSync(object.password, saltRounds)
     return await db.update({ ...object, password }, id, 'user')
   } else if (!object.password && file) {
     console.log(file)
-    const imageBuffer = fs.readFileSync(file.path)
-    return await db.update({ ...object, image: imageBuffer }, id, 'user')
+    return await db.update({ ...object, image: file.filename }, id, 'user')
   } else {
     return await db.update(object, id, 'user')
   }

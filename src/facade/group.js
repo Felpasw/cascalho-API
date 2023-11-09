@@ -20,8 +20,7 @@ const insert = async (object, file) => {
 
     if (!file) return
 
-    const image = fs.readFileSync(file.path)
-    return await db.insert({ ...object, image }, 'group')
+    return await db.insert({ ...object, image: file.filename }, 'group')
   } catch (error) {
     if (error.details) {
       const errors = error.details.map((el) => el.message)
@@ -35,8 +34,7 @@ const insert = async (object, file) => {
 const update = async (id, object, file) => {
   if (!id) return
   if (file) {
-    const image = fs.readFileSync(file.path)
-    return await db.update({ ...object, image }, id, 'group')
+    return await db.update({ ...object, image: file.filename }, id, 'group')
   }
   return await db.update(object, id, 'group')
 }

@@ -7,13 +7,16 @@ const multerConfig = require('./config/multer')
 const handleFacedeExistence = require('./middlewares/handleFacadeExistence')
 const login = require('./api/login')
 const logout = require('./api/logout')
+const path = require('path')
 
 const router = express.Router()
 
 router.use((_req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5173')
+  res.header('Access-Control-Allow-Credentials', true)
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-  router.use(cors())
+  res.header('Access-Control-Allow-Headers', '*')
+  router.use(cors({ credentials: true, origin: 'http://localhost:5173' }))
   next()
 })
 
@@ -25,6 +28,7 @@ router.post('/login', login.insert)
 router.post('/logout', logout.insert)
 
 router.get(`/:route`, auth, handleFacedeExistence, api.get)
+
 router.post(
   `/:route`,
   auth,
@@ -32,6 +36,7 @@ router.post(
   multer(multerConfig).single('archive'),
   api.insert
 )
+
 router.put(
   `/:route/:id`,
   auth,
@@ -39,6 +44,7 @@ router.put(
   multer(multerConfig).single('archive'),
   api.update
 )
+
 router.delete(`/:route/:id`, auth, handleFacedeExistence, api.remove)
 router.get(`/:route/:id`, auth, handleFacedeExistence, api.getById)
 

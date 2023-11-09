@@ -18,7 +18,6 @@ const get = async (req, res) => {
   const response = await facade.get()
   handleResponse(res, response)
 }
-
 const getById = async (req, res) => {
   const facade = require(`../facade/${req.params.route}`)
   if (req.params.route === 'archive') {
@@ -31,6 +30,8 @@ const getById = async (req, res) => {
 }
 const insert = async (req, res) => {
   const facade = require(`../facade/${req.params.route}`)
+  console.log(req.body)
+
   if (req.file) {
     const response = await facade.insert(req.body, req.file)
     handleResponse(res, response)

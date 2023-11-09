@@ -8,10 +8,16 @@ const authMiddleware = async (req, res, next) => {
     if (!user) {
       return res.sendStatus(401)
     }
-    const ruleMethod = require(`../rules/${req.params.route}`)
-    if (await ruleMethod(user, req.method, req.params.id)) {
-      next()
-    }
+    next()
+    // if (req.params.route === 'static') {
+    //   next()
+    //   return
+    // } else {
+    //   const ruleMethod = require(`../rules/${req.params.route}`)
+    //   if (await ruleMethod(user, req.method, req.params.id)) {
+    //     next()
+    //   }
+    // }
   }
 }
 

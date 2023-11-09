@@ -9,12 +9,13 @@ const getById = async (id) => {
   if (!id) return
   return await db.getById(id, 'category')
 }
-const insert = async (object) => {
+const insert = async (object, file) => {
   try {
     await validation.object.validateAsync(object, {
       messages
     })
-    return await db.insert(object, 'category')
+    console.log(file)
+    return await db.insert({ ...object, icon: file.filename }, 'category')
   } catch (error) {
     if (error.details) {
       const errors = error.details.map((el) => el.message)

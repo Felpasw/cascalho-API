@@ -3,7 +3,7 @@ exports.up = function (knex) {
     table.increments('id').primary()
     table.string('name').notNullable()
     table.string('email').notNullable()
-    table.binary('image')
+    table.string('image')
     table.string('password').notNullable()
     table.integer('group_id').unsigned()
     table.foreign('group_id').references('group.id')

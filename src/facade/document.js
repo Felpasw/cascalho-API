@@ -4,8 +4,8 @@ const fs = require('fs')
 const { messages } = require('joi-translation-pt-br')
 
 const get = async (query) => {
-  if (!query.userId) return
-  return await db.getItemByRelationId(query.userId, 'document', 'user_id')
+  if (query.userId) return await db.getItemByRelationId(query.userId, 'document', 'user_id')
+  if (query.folderId) return await db.getItemByRelationId(query.folderId, 'document', 'folder_id')
 }
 
 const getById = async (id) => {
@@ -18,17 +18,15 @@ const insert = async (object, file) => {
     if (!file) throw new Error('Arquivo ausente')
     await validation.object.validateAsync(object, { messages })
 
-    const archiveBuffer = fs.readFileSync(file.path)
-
     if (!(await db.getById(object.userId, 'user'))) throw new Error('Usuário informado não existe')
 
     if (object.folderId) {
       if (!(await db.getById(object.folderId, 'folder')))
         throw new Error('Pasta selecionada não existe')
     }
-    const document = await db.insert({ ...object, version: 1 }, 'document')
+    const document = await db.insert({ userId: object.userId, version: 1 }, 'document')
 
-    const archive = await db.insert({ archive: archiveBuffer, name: file.filename }, 'archive')
+    const archive = await db.insert({ name: file.filename }, 'archive')
 
     const documentUpdated = await db.update({ archive_id: archive.id }, document.id, 'document')
 
@@ -47,7 +45,7 @@ const insert = async (object, file) => {
 
 const update = async (id, object) => {
   if (!id) return
-  await db.update(object, id, 'document')
+  return await db.update(object, id, 'document')
 }
 
 const remove = async (id) => {

@@ -25,7 +25,7 @@ const insert = async (object, file) => {
     await validation.object.validateAsync(object, {
       messages
     })
-
+    console.log(file)
     const categoryExists = await db.getById(object.categoryId, 'category')
 
     const userExists = await db.getById(object.userId, 'user')
@@ -35,7 +35,9 @@ const insert = async (object, file) => {
     if (!userExists) throw new Error('Usuário selecionado não existe')
 
     if (file) {
-      const Document = await document.insert(object, file)
+      console.log(object)
+      const Document = await document.insert({ userId: object.userId }, file)
+      console.log(Document)
       return await db.insert({ ...object, document_id: Document.id }, 'publication')
     }
 
