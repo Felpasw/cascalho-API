@@ -1,5 +1,5 @@
 # Projeto de Treinamento Cascalho - Softwaresul 💻
-Bem-vindo ao Cascalho, a sua plataforma interna de networking e colaboração! - API 🌐✨
+Bem-vindo ao Cascalho, a sua plataforma interna de networking e colaboração! 🌐✨
 
 # Visão Geral 🎈
 
